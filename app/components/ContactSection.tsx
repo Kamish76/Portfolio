@@ -29,11 +29,11 @@ export default function ContactSection() {
             </li>
             <li>
               <a
-                href="https://github.com/Fire7610"
+                href="https://github.com/Kamish76"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                GitHub: https://github.com/Fire7610
+                GitHub: https://github.com/Kamish76
               </a>
             </li>
           </ul>
