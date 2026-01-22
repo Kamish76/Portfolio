@@ -24,3 +24,228 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.column {
+  flex: 1 1 45%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.about-me-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #e0e0e0;
+    background-image: url("/JBZ(1).jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  border-radius: 12px;
+  box-shadow: 0 5px 60px rgba(50, 50, 230, 0.5);
+  position: relative;
+}
+
+.about-me-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 10, 25, 0.6);
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.about-me-header,
+.profile-section,
+.content-section {
+  position: relative;
+  z-index: 2;
+}
+
+.about-me-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(255, 204, 102, 0.5);
+}
+
+.about-me-header h1 {
+  font-size: 3rem;
+  color: #ffcc66;
+  text-shadow: 0 0 10px rgba(255, 204, 102, 0.5);
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  gap: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(10, 20, 40, 0.6);
+  border-radius: 8px;
+}
+
+.profile-image-container {
+  flex-shrink: 0;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #66aaff;
+  box-shadow: 0 0 15px rgba(102, 170, 255, 0.6);
+}
+
+.profile-intro h2 {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  color: #aaddff;
+}
+
+.profile-intro p {
+  font-size: 1.1rem;
+  color: #c0c0c0;
+  margin-bottom: 0.3rem;
+}
+
+.profile-intro .bio-text {
+  padding: 0.5rem;
+  margin-top: 0.75rem;
+  border-left: 3px solid #66aaff;
+  background-color: rgba(10, 25, 50, 0.4);
+  border-radius: 0 4px 4px 0;
+  font-style: italic;
+  color: #d0d0e0;
+}
+
+.content-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(10, 20, 40, 0.5);
+  border-radius: 8px;
+}
+
+h3 {
+  font-size: 1.8rem;
+  color: #ffcc66;
+  margin-top: 0rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(102, 170, 255, 0.4);
+}
+
+h4 {
+  font-size: 1.3rem;
+  color: #aaddff;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.education-section .education-entry,
+.projects-section .project-entry {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  border-left: 4px solid #ff9933;
+  background-color: rgba(20, 30, 50, 0.4);
+  padding-top: 0rem;
+  padding-bottom: 1.5rem;
+  border-radius: 0 6px 6px 0;
+}
+
+.skills-section ul,
+.contact-section ul {
+  line-height: 1.7;
+  font-size: 1rem;
+  color: #d0d0d0;
+}
+
+.skills-list,
+.contact-links {
+  list-style: none;
+  padding-left: 0;
+}
+
+.skills-section h4 + .skills-list {
+  margin-bottom: 1.5rem;
+}
+
+.skills-list li {
+  background-color: rgba(0, 86, 179, 0.5);
+  color: #cce6ff;
+  padding: 0.6rem 1.2rem;
+  margin-bottom: 0.6rem;
+  border-radius: 20px;
+  display: inline-block;
+  margin-right: 0.6rem;
+  font-size: 0.95rem;
+  border: 1px solid rgba(102, 170, 255, 0.5);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.skills-list li:hover {
+  transform: translateY(-2px);
+  background-color: rgba(0, 100, 200, 0.7);
+}
+
+.contact-links li {
+  margin-bottom: 0.75rem;
+}
+
+.contact-links a,
+.contact-links span {
+  color: #ff9933;
+  text-decoration: none;
+  font-size: 1.05rem;
+  transition: color 0.2s ease;
+}
+
+.contact-links a:hover {
+  color: #ffcc66;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .about-me-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  .profile-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-image-container {
+    margin-bottom: 1.5rem;
+  }
+
+  .about-me-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .profile-intro h2 {
+    font-size: 1.7rem;
+  }
+
+  .education-section .education-entry,
+  .projects-section .project-entry {
+    padding-left: 1rem;
+    border-left-width: 3px;
+  }
+  .content-section {
+    padding: 1rem;
+  }
+}
