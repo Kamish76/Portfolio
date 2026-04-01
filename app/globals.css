@@ -23,6 +23,52 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  scroll-snap-type: y proximity;
+}
+
+/* Home hero and section styles */
+
+.site-shell {
+  min-height: 100vh;
+  padding: 1.25rem;
+  color: #e0e0e0;
+  background:
+    radial-gradient(circle at 78% 42%, rgba(102, 170, 255, 0.12), transparent 34%),
+    radial-gradient(circle at 14% 16%, rgba(255, 204, 102, 0.08), transparent 28%),
+    linear-gradient(180deg, #070d1a 0%, #050913 100%);
+}
+
+.top-nav {
+  position: sticky;
+  top: 1rem;
+  z-index: 12;
+  max-width: 620px;
+  margin: 0 auto 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(102, 170, 255, 0.45);
+  background: rgba(10, 20, 40, 0.7);
+  backdrop-filter: blur(7px);
+  box-shadow: 0 0 14px rgba(102, 170, 255, 0.24);
+}
+
+.top-nav a {
+  color: #cce6ff;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid transparent;
+}
+
+.top-nav a:hover {
+  border-bottom-color: rgba(255, 204, 102, 0.75);
 }
 
 .row {
@@ -38,17 +84,16 @@ body {
 }
 
 .about-me-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
+  min-height: 100svh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #e0e0e0;
-    background-image: url("/JBZ(1).jpg");
+  background-image: url("/JBZ(1).jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  border-radius: 12px;
-  box-shadow: 0 5px 60px rgba(50, 50, 230, 0.5);
   position: relative;
 }
 
@@ -60,8 +105,28 @@ body {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 10, 25, 0.6);
-  border-radius: 12px;
   z-index: 1;
+}
+
+.portfolio-page-section {
+  position: relative;
+  z-index: 2;
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.portfolio-page-section .content-section {
+  width: min(980px, 100%);
+  margin: 0;
+}
+
+.portfolio-page-section.section-home {
+  justify-content: flex-start;
 }
 
 .about-me-header,
@@ -79,6 +144,7 @@ body {
 }
 
 .about-me-header h1 {
+  margin: 0;
   font-size: 3rem;
   color: #ffcc66;
   text-shadow: 0 0 10px rgba(255, 204, 102, 0.5);
@@ -130,7 +196,7 @@ body {
 }
 
 .content-section {
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   padding: 1.5rem;
   background-color: rgba(10, 20, 40, 0.5);
   border-radius: 8px;
@@ -219,10 +285,26 @@ h4 {
 }
 
 @media (max-width: 768px) {
-  .about-me-container {
-    margin: 1rem;
+  .site-shell {
+    padding: 0.9rem;
+  }
+
+  .top-nav {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .portfolio-page-section {
+    min-height: 100svh;
+    align-items: flex-start;
     padding: 1rem;
   }
+
+  .about-me-container {
+    background-attachment: scroll;
+  }
+
   .profile-section {
     flex-direction: column;
     text-align: center;
@@ -245,6 +327,7 @@ h4 {
     padding-left: 1rem;
     border-left-width: 3px;
   }
+
   .content-section {
     padding: 1rem;
   }
