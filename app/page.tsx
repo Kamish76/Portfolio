@@ -12,10 +12,6 @@ export default function App() {
         <Home />
       </div>
 
-      <div className="portfolio-page-section" id="education">
-        <EducationSection />
-      </div>
-
       <div className="portfolio-page-section" id="projects">
         <ProjectSection />
       </div>
@@ -23,6 +19,10 @@ export default function App() {
       <div className="portfolio-page-section" id="skills">
         <SkillsSection />
       </div>
+
+      <div className="portfolio-page-section" id="education">
+        <EducationSection />
+      </div>    
 
       <div className="portfolio-page-section" id="contact">
         <ContactSection />
