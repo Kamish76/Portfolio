@@ -84,10 +84,6 @@ body {
 }
 
 .about-me-container {
-  min-height: 100svh;
-  width: 100%;
-  margin: 0;
-  padding: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #e0e0e0;
   background-image: url("/JBZ(1).jpg");

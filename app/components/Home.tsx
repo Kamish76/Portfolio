@@ -1,4 +1,4 @@
-import styles from "./ProfileSection.module.css";
+import styles from "./Home.module.css";
 
 export default function ProfileSection() {
   return (
