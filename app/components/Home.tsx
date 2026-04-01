@@ -2,7 +2,7 @@ import styles from "./Home.module.css";
 
 export default function ProfileSection() {
   return (
-    <section className={styles.homeHero} id="home">
+    <section id="home">
       <p className={styles.introKicker}>Hi, I&apos;m</p>
 
       <h1 className={styles.heroName}>
