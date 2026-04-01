@@ -1,22 +1,32 @@
 import React from 'react';
-import ProfileSection from './components/ProfileSection';
+import Home from './components/Home';
 import EducationSection from './components/EducationSection';
 import ProjectSection from './components/ProjectSection';
 import SkillsSection from './components/SkillsSection';
 import ContactSection from './components/ContactSection';
 
-export default function Home() {
+export default function App() {
   return (
     <div className="about-me-container">
-      <header className="about-me-header">
-        <h1>About Me</h1>
-      </header>
+      <div className="portfolio-page-section section-home" id="home">
+        <Home />
+      </div>
 
-      <ProfileSection />
-      <EducationSection />
-      <ProjectSection />
-      <SkillsSection />
-      <ContactSection />
+      <div className="portfolio-page-section" id="projects">
+        <ProjectSection />
+      </div>
+
+      <div className="portfolio-page-section" id="skills">
+        <SkillsSection />
+      </div>
+
+      <div className="portfolio-page-section" id="education">
+        <EducationSection />
+      </div>    
+
+      <div className="portfolio-page-section" id="contact">
+        <ContactSection />
+      </div>
     </div>
   );
 }
