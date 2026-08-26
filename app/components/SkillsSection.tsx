@@ -1,6 +1,6 @@
 export default function SkillsSection() {
   return (
-    <section className="skills-section content-section">
+    <div className="skills-section content-section">
       <h3>Skills</h3>
       <h4>Programming Languages</h4>
       <ul className="skills-list">
@@ -52,6 +52,6 @@ export default function SkillsSection() {
         <li>Embedded Systems Programming</li>
         <li>Sensor Data Acquisition</li>
       </ul>
-    </section>
+    </div>
   );
 }

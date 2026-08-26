@@ -22,7 +22,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   margin: 0;
   scroll-snap-type: y proximity;
 }
@@ -42,7 +42,6 @@ body {
 }
 
 .about-me-container {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #e0e0e0;
   background-image: url("/space-bg.jpg");
   background-size: cover;
@@ -65,11 +64,9 @@ body {
 .portfolio-page-section {
   position: relative;
   z-index: 2;
-  min-height: 100svh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   display: flex;
-  align-items: center;
   justify-content: center;
   padding: clamp(1rem, 4vw, 3rem);
 }
@@ -80,6 +77,8 @@ body {
 }
 
 .portfolio-page-section.section-home {
+  min-height: 100svh;
+  align-items: center;
   justify-content: flex-start;
 }
 
@@ -121,6 +120,21 @@ h4 {
   padding-top: 0rem;
   padding-bottom: 1.5rem;
   border-radius: 0 6px 6px 0;
+}
+
+.project-details {
+  margin-top: 0.8rem;
+  padding-left: 1.2rem;
+  color: #d0d0d0;
+  font-size: 0.95rem;
+}
+
+.project-details li {
+  margin-bottom: 0.4rem;
+}
+
+.project-details strong {
+  color: #ffcc66;
 }
 
 .skills-section ul,
@@ -179,13 +193,16 @@ h4 {
 
 @media (max-width: 768px) {
   .portfolio-page-section {
-    min-height: 100svh;
     align-items: flex-start;
     padding: 1rem;
   }
 
   .about-me-container {
     background-attachment: scroll;
+  }
+
+  .column {
+    flex: 1 1 100%;
   }
 
   .education-section .education-entry,

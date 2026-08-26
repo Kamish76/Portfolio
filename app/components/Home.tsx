@@ -2,7 +2,7 @@ import styles from "./Home.module.css";
 
 export default function ProfileSection() {
   return (
-    <section id="home">
+    <div className={styles.homeHero}>
       <p className={styles.introKicker}>Hi, I&apos;m</p>
 
       <h1 className={styles.heroName}>
@@ -12,11 +12,10 @@ export default function ProfileSection() {
         <br />
         ABELLA
       </h1>
-      <p className={styles.heroRole}>Building for Web & Mobile</p>
+      <p className={styles.heroRole}>3rd Year BSCS Student</p>
 
       <p className={styles.heroSubtext}>
-        Building practical systems with modern web technologies and embedded
-        hardware.
+        Exploring web and mobile app development, embedded systems (ESP32, circuit prototyping), and 3D printing technologies. Currently seeking new development projects to expand my technical stack and gain hands-on production experience.
       </p>
       <div className={styles.heroLinks}>
         <a
@@ -35,6 +34,6 @@ export default function ProfileSection() {
         </a>
         <a href="mailto:jabezrafael1@gmail.com">Email</a>
       </div>
-    </section>
+    </div>
   );
 }

@@ -8,25 +8,25 @@ import ContactSection from './components/ContactSection';
 export default function App() {
   return (
     <div className="about-me-container">
-      <div className="portfolio-page-section section-home" id="home">
+      <section className="portfolio-page-section section-home" id="home">
         <Home />
-      </div>
+      </section>
 
-      <div className="portfolio-page-section" id="projects">
+      <section className="portfolio-page-section" id="projects">
         <ProjectSection />
-      </div>
+      </section>
 
-      <div className="portfolio-page-section" id="skills">
+      <section className="portfolio-page-section" id="skills">
         <SkillsSection />
-      </div>
+      </section>
 
-      <div className="portfolio-page-section" id="education">
+      <section className="portfolio-page-section" id="education">
         <EducationSection />
-      </div>    
+      </section>    
 
-      <div className="portfolio-page-section" id="contact">
+      <section className="portfolio-page-section" id="contact">
         <ContactSection />
-      </div>
+      </section>
     </div>
   );
 }
