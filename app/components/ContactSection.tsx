@@ -1,6 +1,6 @@
 export default function ContactSection() {
   return (
-    <section className="contact-section content-section">
+    <div className="contact-section content-section">
       <h3>Get In Touch</h3>
       <p>Feel free to reach out! You can find me on:</p>
       <div className="row">
@@ -39,6 +39,6 @@ export default function ContactSection() {
           </ul>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
