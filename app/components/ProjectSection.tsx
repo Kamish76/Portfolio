@@ -21,6 +21,24 @@ export default function ProjectSection() {
         </ul>
       </div>
       <div className="project-entry">
+        <h4><a href="https://github.com/Kamish76/ViabilityNode" target="_blank" rel="noopener noreferrer">ViabilityNode (Web Dashboard)</a></h4>
+        <p>Real-time plant telemetry dashboard &mdash; the web-facing component of the Plant Surrogate Monitoring System. Ingests sensor data pushed over Wi-Fi from an ESP32-C6 surrogate node and displays it in a live dashboard.</p>
+        <ul className="project-details">
+          <li><strong>Role:</strong> Sole Developer</li>
+          <li><strong>Tech Stack:</strong> Next.js, Supabase, PostgreSQL</li>
+          <li><strong>Results:</strong> Built a live dashboard to persist and visualize telemetry data, with server-side rendered metrics and automated VPD calculation.</li>
+        </ul>
+      </div>
+      <div className="project-entry">
+        <h4><a href="https://github.com/Kamish76/Plant-Surrugate-ViabilityNode" target="_blank" rel="noopener noreferrer">Plant Surrogate ViabilityNode (Firmware)</a></h4>
+        <p>An autonomous, hyper-efficient microclimate profiling platform for evaluating plant viability. Captures high-fidelity environmental data and pushes it to a backend over Wi-Fi.</p>
+        <ul className="project-details">
+          <li><strong>Role:</strong> Sole Developer</li>
+          <li><strong>Tech Stack:</strong> C++, ESP32-C6, Sensors (VEML7700, AHT20, BMP280, Capacitive Soil)</li>
+          <li><strong>Results:</strong> Achieved extreme low power consumption using RTC deep sleep (sub-20&micro;A idle) to enable 30-day autonomy on a strict energy-harvesting power chain.</li>
+        </ul>
+      </div>
+      <div className="project-entry">
         <h4>
           <a href="https://github.com/CSci-153-Web-Systems-and-Technologies/batch-2025-nfc-attendance-system-web" target="_blank" rel="noopener noreferrer">
             NFCentry: NFC-Based Attendance Management System
