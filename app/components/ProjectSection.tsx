@@ -1,74 +1,490 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { PROJECTS, type ProjectItem } from "../data/projects";
+
 export default function ProjectSection() {
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (!selectedProject) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedProject(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedProject]);
+
+  const featuredProjects = PROJECTS.filter((p) => p.featuredOnHome);
+  const hardwareProjects = PROJECTS.filter((p) => p.hardwareOnHome);
+
   return (
-    <div className="projects-section content-section">
-      <h3>Projects</h3>
-      <div className="project-entry">
-        <h4><a href="https://github.com/Kamish76/Financial-tracker-ProjectDec1025" target="_blank" rel="noopener noreferrer">OrgFinance (Web Platform)</a></h4>
-        <p>A comprehensive, multi-tenant web application for individuals, student groups, and small businesses to track finances. It distinguishes between business/operational expenses and out-of-pocket personal contributions, while also offering a specialized single-tenant Personal Wallet Mode.</p>
-        <ul className="project-details">
-          <li><strong>Role:</strong> Sole Developer</li>
-          <li><strong>Tech Stack:</strong> Next.js 16, React 19, TypeScript, Tailwind CSS 4, Shadcn UI, Supabase</li>
-          <li><strong>Results:</strong> Engineered robust financial logic for collaborative environments and implemented automated Vercel Cron Jobs to ensure database uptime and resilience.</li>
-        </ul>
+    <div className="section-inner">
+      {/* Section Header */}
+      <div className="section-header-split">
+        <div>
+          <p className="eyebrow">SELECTED WORK / 01</p>
+          <h2 className="section-title">Systems, built and shipped.</h2>
+        </div>
+        <div>
+          <p className="section-subtitle">
+            Independent full-stack platforms, offline-first mobile apps, and
+            biophysical embedded hardware built around real operational problems.
+          </p>
+          <div style={{ marginTop: "0.85rem" }}>
+            <Link href="/projects" className="action-link-story">
+              Explore full engineering archive ({PROJECTS.length} systems) →
+            </Link>
+          </div>
+        </div>
       </div>
-      <div className="project-entry">
-        <h4><a href="https://github.com/Kamish76/Wallet-tracker-ProjectJuly29-.git" target="_blank" rel="noopener noreferrer">OrgWallet (Android Companion App)</a></h4>
-        <p>The official mobile companion app to OrgFinance, designed for fast, offline-first personal expense tracking on the go. It utilizes local SQLite storage with a smart background synchronization engine to sync with the main Supabase backend when online.</p>
-        <ul className="project-details">
-          <li><strong>Role:</strong> Sole Developer</li>
-          <li><strong>Tech Stack:</strong> React Native, Expo (Expo Router), TypeScript, SQLite</li>
-          <li><strong>Results:</strong> Delivered a seamless offline-first mobile experience with reliable conflict resolution and unified authentication across the ecosystem.</li>
-        </ul>
+
+      {/* Tier 1: Featured Horizontal Split Cards */}
+      <div className="featured-projects-stack">
+        {featuredProjects.map((project) => (
+          <article key={project.id} className="project-card-featured">
+            {/* Left Column: Interactive Telemetry / Architecture Preview Well */}
+            <button
+              type="button"
+              className="project-preview-well"
+              onClick={() => setSelectedProject(project)}
+              aria-label={`Inspect ${project.title} architecture and case study`}
+            >
+              <div className="preview-Diagram-frame">
+                <div className="preview-window-bar">
+                  <div className="window-dots" aria-hidden="true">
+                    <span className="window-dot" />
+                    <span className="window-dot" />
+                    <span className="window-dot" />
+                  </div>
+                  <span>SYS_SPEC // {project.id.toUpperCase()}</span>
+                </div>
+
+                <div className="preview-architecture-flow">
+                  {project.flow.map((node, idx) => (
+                    <span
+                      key={node}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.4rem",
+                      }}
+                    >
+                      <span className="flow-node">{node}</span>
+                      {idx < project.flow.length - 1 && (
+                        <span className="flow-arrow" aria-hidden="true">
+                          →
+                        </span>
+                      )}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="preview-metrics-grid">
+                  {project.metrics.map((m) => (
+                    <div key={m.label} className="preview-metric-box">
+                      <span className="preview-metric-label">{m.label}</span>
+                      <span className="preview-metric-value">{m.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <span
+                style={{
+                  marginTop: "1rem",
+                  fontFamily: "var(--font-geist-mono), monospace",
+                  fontSize: "0.7rem",
+                  color: "var(--text-dim)",
+                  letterSpacing: "0.08em",
+                }}
+              >
+                [ CLICK TO OPEN SYSTEM CASE STUDY ]
+              </span>
+            </button>
+
+            {/* Right Column: Editorial Project Story & Actions */}
+            <div className="project-body">
+              <p className="eyebrow eyebrow-blue">
+                {project.index} / {project.category}
+              </p>
+
+              <div className="project-title-row">
+                <h3 className="project-title">{project.title}</h3>
+                {project.badge && (
+                  <span className="status-badge">{project.badge}</span>
+                )}
+              </div>
+
+              <p className="project-role">{project.role}</p>
+
+              <p className="project-description">{project.summary}</p>
+
+              <ul
+                className="project-stack-inline"
+                aria-label="Technologies used"
+              >
+                {project.stack.map((tech) => (
+                  <li key={tech}>{tech}</li>
+                ))}
+              </ul>
+
+              <div className="project-actions-footer">
+                <button
+                  type="button"
+                  className="action-link-story"
+                  onClick={() => setSelectedProject(project)}
+                >
+                  Read project story →
+                </button>
+
+                {project.repoUrl && (
+                  <a
+                    href={project.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="action-link-external"
+                  >
+                    View repository ↗
+                  </a>
+                )}
+
+                {project.secondaryRepoUrl && (
+                  <a
+                    href={project.secondaryRepoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="action-link-external"
+                  >
+                    {project.secondaryRepoLabel ?? "Secondary repo"} ↗
+                  </a>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
-      <div className="project-entry">
-        <h4><a href="https://github.com/Kamish76/ViabilityNode" target="_blank" rel="noopener noreferrer">ViabilityNode (Web Dashboard)</a></h4>
-        <p>Real-time plant telemetry dashboard &mdash; the web-facing component of the Plant Surrogate Monitoring System. Ingests sensor data pushed over Wi-Fi from an ESP32-C6 surrogate node and displays it in a live dashboard.</p>
-        <ul className="project-details">
-          <li><strong>Role:</strong> Sole Developer</li>
-          <li><strong>Tech Stack:</strong> Next.js, Supabase, PostgreSQL</li>
-          <li><strong>Results:</strong> Built a live dashboard to persist and visualize telemetry data, with server-side rendered metrics and automated VPD calculation.</li>
-        </ul>
+
+      {/* Tier 2: Hardware & Experimental R&D (3-Column Responsive Grid) */}
+      <div className="subsection-divider">
+        <div className="section-header-split" style={{ marginBottom: "1.75rem" }}>
+          <div>
+            <p className="eyebrow">HARDWARE &amp; EXPERIMENTAL R&amp;D</p>
+            <h3
+              style={{
+                margin: 0,
+                fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
+                fontWeight: 800,
+                letterSpacing: "-0.025em",
+              }}
+            >
+              Embedded ESP32 nodes, sensors &amp; fabrication.
+            </h3>
+          </div>
+          <p className="section-subtitle">
+            Low-level C++ firmware, sub-20µA deep-sleep power chains, I2C sensor
+            arrays, and custom 3D-printed radiation shields &amp; G-code.
+          </p>
+        </div>
+
+        <div className="projects-grid-hardware">
+          {hardwareProjects.map((project) => (
+            <article key={project.id} className="project-card-compact">
+              <button
+                type="button"
+                className="project-preview-well"
+                onClick={() => setSelectedProject(project)}
+                aria-label={`Inspect ${project.title} details`}
+              >
+                <div className="preview-Diagram-frame">
+                  <div className="preview-window-bar">
+                    <div className="window-dots" aria-hidden="true">
+                      <span className="window-dot" />
+                      <span className="window-dot" />
+                      <span className="window-dot" />
+                    </div>
+                    <span>HW_LOG // {project.index}</span>
+                  </div>
+
+                  <div className="preview-metrics-grid" style={{ marginTop: 0 }}>
+                    {project.metrics.map((m) => (
+                      <div key={m.label} className="preview-metric-box">
+                        <span className="preview-metric-label">{m.label}</span>
+                        <span className="preview-metric-value">{m.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </button>
+
+              <div className="project-body">
+                <p className="eyebrow eyebrow-blue">
+                  {project.index} / {project.category}
+                </p>
+
+                <div className="project-title-row">
+                  <h4 className="project-title" style={{ fontSize: "1.35rem" }}>
+                    {project.title}
+                  </h4>
+                  {project.badge && (
+                    <span className="status-badge">{project.badge}</span>
+                  )}
+                </div>
+
+                <p className="project-role">{project.role}</p>
+                <p className="project-description">{project.summary}</p>
+
+                <ul className="project-stack-inline">
+                  {project.stack.map((tech) => (
+                    <li key={tech}>{tech}</li>
+                  ))}
+                </ul>
+
+                <div className="project-actions-footer">
+                  <button
+                    type="button"
+                    className="action-link-story"
+                    onClick={() => setSelectedProject(project)}
+                  >
+                    Read technical breakdown →
+                  </button>
+
+                  {project.repoUrl && (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="action-link-external"
+                    >
+                      Firmware repo ↗
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
-      <div className="project-entry">
-        <h4><a href="https://github.com/Kamish76/Plant-Surrugate-ViabilityNode" target="_blank" rel="noopener noreferrer">Plant Surrogate ViabilityNode (Firmware)</a></h4>
-        <p>An autonomous, hyper-efficient microclimate profiling platform for evaluating plant viability. Captures high-fidelity environmental data and pushes it to a backend over Wi-Fi.</p>
-        <ul className="project-details">
-          <li><strong>Role:</strong> Sole Developer</li>
-          <li><strong>Tech Stack:</strong> C++, ESP32-C6, Sensors (VEML7700, AHT20, BMP280, Capacitive Soil)</li>
-          <li><strong>Results:</strong> Achieved extreme low power consumption using RTC deep sleep (sub-20&micro;A idle) to enable 30-day autonomy on a strict energy-harvesting power chain.</li>
-        </ul>
+
+      {/* Full Project Archive Callout Banner */}
+      <div className="archive-callout-banner">
+        <div>
+          <p className="eyebrow" style={{ marginBottom: "0.35rem" }}>
+            DEVBRAIN ARCHIVE // {PROJECTS.length} SYSTEMS INDEXED
+          </p>
+          <h4
+            style={{
+              margin: 0,
+              fontSize: "clamp(1.25rem, 2.2vw, 1.6rem)",
+              fontWeight: 800,
+              color: "var(--text-primary)",
+            }}
+          >
+            Want to see the rest of my engineering work?
+          </h4>
+          <p
+            style={{
+              margin: "0.4rem 0 0",
+              color: "var(--text-secondary)",
+              fontSize: "0.94rem",
+              maxWidth: "38rem",
+            }}
+          >
+            Explore all {PROJECTS.length} systems — including Flutter &amp; Flame
+            2D game engines (BONKHOLD, Production.INC), Neon Realtime campus
+            platforms (Salingkusog), and closed-loop planetary simulations.
+          </p>
+        </div>
+
+        <Link href="/projects" className="btn-primary">
+          Open Project Archive ({PROJECTS.length}) →
+        </Link>
       </div>
-      <div className="project-entry">
-        <h4>
-          <a href="https://github.com/CSci-153-Web-Systems-and-Technologies/batch-2025-nfc-attendance-system-web" target="_blank" rel="noopener noreferrer">
-            NFCentry: NFC-Based Attendance Management System
-          </a>
-        </h4>
-        <p>A production-ready, mobile-first full-stack web application that revolutionizes event attendance tracking using NFC technology, QR codes, and manual entry methods.</p>
-        <ul className="project-details">
-          <li><strong>Role:</strong> Sole Developer</li>
-          <li><strong>Tech Stack:</strong> Web NFC API, React, Next.js, Node.js</li>
-          <li><strong>Results:</strong> Eliminated traditional time-consuming attendance methods by providing automated, real-time check-ins for users.</li>
-        </ul>
-      </div>
-      <div className="project-entry">
-        <h4>Power Bank Monitoring (ESP32-C3 & INA226)</h4>
-        <p>An Arduino-based, low-power solution for the ESP32-C3 microcontroller to accurately monitor power bank battery, voltage, amperage, and wattage.</p>
-        <ul className="project-details">
-          <li><strong>Role:</strong> Sole Developer</li>
-          <li><strong>Tech Stack:</strong> C++, Arduino, ESP32-C3, INA226 Sensor</li>
-          <li><strong>Results:</strong> Achieved highly accurate sensor readings through custom calibration code, optimizing power efficiency.</li>
-        </ul>
-      </div>
-      <div className="project-entry">
-        <h4>G-Code for Multi-Material Prints (Non-AMS)</h4>
-        <p>Experimental G-code for Bambu Labs A1 printers to enable multi-material printing without an AMS, automating filament change pauses and allowing mid-layer swaps.</p>
-        <ul className="project-details">
-          <li><strong>Role:</strong> Sole Developer</li>
-          <li><strong>Tech Stack:</strong> G-code, Bambu Studio</li>
-          <li><strong>Results:</strong> Enabled seamless multi-color 3D prints without requiring expensive AMS hardware upgrades.</li>
-        </ul>
-      </div>
+
+      {/* Interactive Case Study Modal */}
+      {selectedProject && (
+        <div
+          className="modal-backdrop"
+          onClick={() => setSelectedProject(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-project-title"
+        >
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                gap: "1rem",
+              }}
+            >
+              <div>
+                <p className="eyebrow eyebrow-blue">
+                  {selectedProject.index} / {selectedProject.category}
+                </p>
+                <h3
+                  id="modal-project-title"
+                  className="project-title"
+                  style={{ fontSize: "clamp(1.6rem, 3vw, 2.25rem)" }}
+                >
+                  {selectedProject.title}
+                </h3>
+                <p className="project-role">{selectedProject.role}</p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedProject(null)}
+                className="btn-secondary"
+                style={{ minHeight: "36px", padding: "0.35rem 0.85rem" }}
+              >
+                Close [ESC]
+              </button>
+            </div>
+
+            <div className="modal-grid">
+              <div style={{ display: "grid", gap: "1.25rem" }}>
+                <div>
+                  <h4
+                    style={{
+                      margin: "0 0 0.4rem",
+                      fontSize: "0.85rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      color: "var(--accent-amber)",
+                      fontFamily: "var(--font-geist-mono), monospace",
+                    }}
+                  >
+                    The Problem
+                  </h4>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "var(--text-secondary)",
+                      fontSize: "0.95rem",
+                    }}
+                  >
+                    {selectedProject.problem}
+                  </p>
+                </div>
+
+                <div>
+                  <h4
+                    style={{
+                      margin: "0 0 0.4rem",
+                      fontSize: "0.85rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      color: "var(--accent-amber)",
+                      fontFamily: "var(--font-geist-mono), monospace",
+                    }}
+                  >
+                    The Engineering Solution
+                  </h4>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "var(--text-secondary)",
+                      fontSize: "0.95rem",
+                    }}
+                  >
+                    {selectedProject.solution}
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gap: "1.25rem" }}>
+                <div>
+                  <h4
+                    style={{
+                      margin: "0 0 0.6rem",
+                      fontSize: "0.85rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      color: "var(--accent-blue)",
+                      fontFamily: "var(--font-geist-mono), monospace",
+                    }}
+                  >
+                    Key Outcomes &amp; Architecture
+                  </h4>
+                  <ul
+                    style={{
+                      margin: 0,
+                      paddingLeft: "1.1rem",
+                      color: "var(--text-secondary)",
+                      fontSize: "0.9rem",
+                      display: "grid",
+                      gap: "0.45rem",
+                    }}
+                  >
+                    {selectedProject.highlights.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h4
+                    style={{
+                      margin: "0 0 0.5rem",
+                      fontSize: "0.85rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      color: "var(--accent-blue)",
+                      fontFamily: "var(--font-geist-mono), monospace",
+                    }}
+                  >
+                    Tech Stack
+                  </h4>
+                  <ul className="project-stack-inline" style={{ marginTop: 0 }}>
+                    {selectedProject.stack.map((tech) => (
+                      <li key={tech}>&gt; {tech}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {(selectedProject.repoUrl || selectedProject.secondaryRepoUrl) && (
+              <div
+                style={{
+                  marginTop: "1.5rem",
+                  paddingTop: "1.25rem",
+                  borderTop: "1px solid var(--border-subtle)",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "0.75rem",
+                }}
+              >
+                {selectedProject.repoUrl && (
+                  <a
+                    href={selectedProject.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary"
+                  >
+                    View GitHub Repository ↗
+                  </a>
+                )}
+                {selectedProject.secondaryRepoUrl && (
+                  <a
+                    href={selectedProject.secondaryRepoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary"
+                  >
+                    {selectedProject.secondaryRepoLabel ?? "Secondary Repo"} ↗
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

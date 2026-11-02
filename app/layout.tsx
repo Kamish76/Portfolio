@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jabez Rafael Abella - Portfolio",
-  description: "Portfolio website of Jabez Rafael Abella, a Computer Science student and aspiring mobile developer.",
+  title: "Jabez Rafael Abella | Full-Stack & Embedded Systems Developer",
+  description:
+    "Portfolio of Jabez Rafael Abella — Full-Stack Web, Offline-First Mobile (Expo), and Embedded IoT (ESP32) Developer based in Baybay, Philippines.",
 };
 
 export default function RootLayout({
