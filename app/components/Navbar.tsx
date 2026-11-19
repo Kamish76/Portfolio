@@ -14,23 +14,42 @@ export default function Navbar() {
   const [activeId, setActiveId] = useState("home");
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
+    const updateActive = () => {
+      const doc = document.documentElement;
+      if (window.innerHeight + window.scrollY >= doc.scrollHeight - 24) {
+        setActiveId(NAV_ITEMS[NAV_ITEMS.length - 1].id);
+        return;
+      }
+
+      const triggerY = window.innerHeight * 0.4;
+      let current = NAV_ITEMS[0].id;
+      for (const item of NAV_ITEMS) {
+        const el = document.getElementById(item.id);
+        if (el && el.getBoundingClientRect().top <= triggerY) {
+          current = item.id;
         }
-      },
-      { rootMargin: "-35% 0px -55% 0px" }
-    );
+      }
+      setActiveId(current);
+    };
 
-    for (const item of NAV_ITEMS) {
-      const el = document.getElementById(item.id);
-      if (el) observer.observe(el);
-    }
+    let rafId = 0;
+    const onScroll = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(() => {
+          rafId = 0;
+          updateActive();
+        });
+      }
+    };
 
-    return () => observer.disconnect();
+    updateActive();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   return (
