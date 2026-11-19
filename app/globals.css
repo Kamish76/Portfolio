@@ -63,85 +63,71 @@ body {
   background: transparent;
 }
 
-/* 7-Layer Pure CSS + Volumetric SVG Celestial Nebula Backdrop */
+/* Stylized Multi-Layer Scroll-Parallax Vector Celestial Backdrop */
 .celestial-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background-color: var(--bg-canvas);
+  background: linear-gradient(155deg, #050a14 0%, #09152b 48%, #060d1c 100%);
   isolation: isolate;
   contain: layout style paint;
 }
 
-.celestial-nebula-base,
-.celestial-nebula-svg,
-.celestial-stars-field,
-.celestial-stars-hero,
-.celestial-comets,
-.celestial-vignette {
+.celestial-plane {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+}
+
+.celestial-plane-svg {
+  display: block;
   width: 100%;
   height: 100%;
 }
 
-/* Layer 1: Seamless deep-space ambient atmosphere */
-.celestial-nebula-base {
-  background:
-    radial-gradient(ellipse 46% 40% at 16% 14%, rgba(28, 138, 224, 0.22) 0%, rgba(12, 54, 122, 0.12) 48%, transparent 78%),
-    radial-gradient(ellipse 38% 34% at 52% 54%, rgba(245, 162, 54, 0.18) 0%, rgba(168, 66, 12, 0.10) 48%, transparent 78%),
-    radial-gradient(ellipse 44% 40% at 75% 46%, rgba(30, 124, 218, 0.20) 0%, rgba(12, 48, 114, 0.10) 52%, transparent 78%),
-    #03060d;
+/* 3 Parallax Depth Planes (fallback driven by --celestial-scroll; upgraded to native CSS scroll-timeline below) */
+.celestial-plane-far {
+  height: 150vh;
+  opacity: 0.92;
+  transform: translate3d(0, calc(var(--celestial-scroll, 0) * -50vh), 0);
 }
 
-/* Layer 2: Static volumetric nebula SVG */
-.celestial-nebula-svg {
-  display: block;
+.celestial-plane-mid {
+  height: 225vh;
+  opacity: 0.86;
+  transform: translate3d(0, calc(var(--celestial-scroll, 0) * -125vh), 0);
 }
 
-/* Layer 3: GPU-composited slow nebula drift veils */
-.celestial-nebula-drift {
-  position: absolute;
-  inset: -12%;
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
+.celestial-plane-near {
+  height: 300vh;
+  opacity: 0.92;
+  transform: translate3d(0, calc(var(--celestial-scroll, 0) * -200vh), 0);
 }
 
-.celestial-nebula-drift-a {
-  background:
-    radial-gradient(ellipse 34% 30% at 20% 18%, rgba(86, 184, 255, 0.15) 0%, transparent 65%),
-    radial-gradient(ellipse 38% 34% at 74% 50%, rgba(44, 174, 236, 0.17) 0%, transparent 68%),
-    radial-gradient(ellipse 26% 24% at 88% 38%, rgba(102, 170, 255, 0.14) 0%, transparent 64%);
-  animation: celestial-drift-a 32s ease-in-out infinite alternate;
+@supports (animation-timeline: scroll()) {
+  .celestial-plane-far {
+    transform: none;
+    animation: celestial-parallax-far linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  .celestial-plane-mid {
+    transform: none;
+    animation: celestial-parallax-mid linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  .celestial-plane-near {
+    transform: none;
+    animation: celestial-parallax-near linear both;
+    animation-timeline: scroll(root block);
+  }
 }
 
-.celestial-nebula-drift-b {
-  background:
-    radial-gradient(ellipse 28% 24% at 52% 54%, rgba(255, 204, 102, 0.16) 0%, rgba(224, 106, 20, 0.09) 45%, transparent 70%),
-    radial-gradient(ellipse 22% 28% at 28% 42%, rgba(245, 148, 42, 0.12) 0%, transparent 64%),
-    radial-gradient(ellipse 24% 18% at 78% 16%, rgba(255, 202, 118, 0.11) 0%, transparent 64%);
-  animation: celestial-drift-b 40s ease-in-out infinite alternate;
-}
-
-/* Layer 4: Zero-grid organic SVG starfield */
-.celestial-stars-field,
-.celestial-stars-hero {
-  display: block;
-}
-
-.celestial-star-layer-a {
-  animation: celestial-shimmer 8.5s ease-in-out infinite alternate;
-  will-change: opacity;
-}
-
-.celestial-star-layer-b {
-  animation: celestial-shimmer 12s ease-in-out 2.5s infinite alternate;
-  will-change: opacity;
-}
-
-/* Layer 5: Curated razor-thin optical diffraction-spike jewel stars */
 .celestial-jewel {
   animation-name: celestial-jewel-twinkle;
   animation-timing-function: ease-in-out;
@@ -150,10 +136,18 @@ body {
   will-change: transform, opacity;
 }
 
-/* Layer 6: Subtle distant shooting stars */
+.celestial-comets,
+.celestial-veil {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Live subtle shooting stars gliding along the -38deg kinetic axis */
 .celestial-comet {
   position: absolute;
-  height: 1.5px;
+  height: 2px;
   border-radius: 999px;
   opacity: 0;
   will-change: transform, opacity;
@@ -164,129 +158,126 @@ body {
   position: absolute;
   right: 0;
   top: 50%;
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 999px;
   transform: translate(50%, -50%);
   background: #ffffff;
 }
 
 .celestial-comet-1 {
-  top: 15%;
-  left: 60%;
-  width: 155px;
-  background: linear-gradient(90deg, transparent 0%, rgba(168, 224, 255, 0.36) 55%, rgba(255, 248, 226, 0.96) 100%);
-  animation: celestial-comet-glide-1 17s ease-in-out 3s infinite;
+  top: 34%;
+  left: 56%;
+  width: 165px;
+  background: linear-gradient(90deg, transparent 0%, rgba(124, 196, 255, 0.45) 55%, rgba(255, 246, 220, 0.98) 100%);
+  animation: celestial-comet-glide-1 16s ease-in-out 2.5s infinite;
 }
 
 .celestial-comet-1::after {
-  box-shadow: 0 0 8px 2px rgba(255, 224, 150, 0.85), 0 0 14px rgba(102, 170, 255, 0.6);
+  box-shadow: 0 0 8px 2px rgba(255, 214, 133, 0.85), 0 0 14px rgba(102, 170, 255, 0.65);
 }
 
 .celestial-comet-2 {
-  top: 26%;
-  left: 24%;
-  width: 125px;
-  background: linear-gradient(90deg, transparent 0%, rgba(102, 170, 255, 0.32) 55%, rgba(224, 244, 255, 0.92) 100%);
-  animation: celestial-comet-glide-2 25s ease-in-out 11s infinite;
+  top: 62%;
+  left: 22%;
+  width: 135px;
+  background: linear-gradient(90deg, transparent 0%, rgba(242, 133, 100, 0.42) 55%, rgba(255, 244, 214, 0.94) 100%);
+  animation: celestial-comet-glide-2 23s ease-in-out 10s infinite;
 }
 
 .celestial-comet-2::after {
-  box-shadow: 0 0 8px 2px rgba(130, 205, 255, 0.85);
+  box-shadow: 0 0 8px 2px rgba(255, 204, 102, 0.82);
 }
 
-/* Layer 7: Atmospheric depth & legibility vignette */
-.celestial-vignette {
+/* Light-touch contrast veil protecting hero copy while keeping vector art crisp */
+.celestial-veil {
   background:
-    radial-gradient(ellipse 88% 80% at 50% 42%, rgba(4, 9, 20, 0.08) 0%, rgba(4, 8, 18, 0.34) 68%, rgba(3, 6, 13, 0.68) 100%);
+    radial-gradient(ellipse 52% 48% at 24% 40%, rgba(5, 10, 22, 0.44) 0%, rgba(5, 10, 22, 0.14) 68%, transparent 100%),
+    radial-gradient(ellipse 92% 86% at 50% 50%, rgba(4, 9, 20, 0.08) 0%, rgba(4, 8, 18, 0.36) 100%);
 }
 
-@keyframes celestial-drift-a {
-  0% {
-    transform: translate3d(-1.8%, -1.2%, 0) scale(1.02);
-    opacity: 0.74;
+@keyframes celestial-parallax-far {
+  from {
+    transform: translate3d(0, 0, 0);
   }
-  100% {
-    transform: translate3d(2.0%, 1.4%, 0) scale(1.07);
-    opacity: 0.96;
-  }
-}
-
-@keyframes celestial-drift-b {
-  0% {
-    transform: translate3d(1.6%, 1.0%, 0) scale(1.06);
-    opacity: 0.72;
-  }
-  100% {
-    transform: translate3d(-1.8%, -1.2%, 0) scale(1.01);
-    opacity: 0.94;
+  to {
+    transform: translate3d(0, -50vh, 0);
   }
 }
 
-@keyframes celestial-shimmer {
-  0% {
-    opacity: 0.64;
+@keyframes celestial-parallax-mid {
+  from {
+    transform: translate3d(0, 0, 0);
   }
-  100% {
-    opacity: 1;
+  to {
+    transform: translate3d(0, -125vh, 0);
+  }
+}
+
+@keyframes celestial-parallax-near {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -200vh, 0);
   }
 }
 
 @keyframes celestial-jewel-twinkle {
   0% {
-    opacity: 0.72;
-    transform: scale(0.9);
+    opacity: 0.62;
+    transform: scale(0.84);
   }
   100% {
     opacity: 1;
-    transform: scale(1.08);
+    transform: scale(1.12);
   }
 }
 
 @keyframes celestial-comet-glide-1 {
-  0%, 88% {
+  0%, 87% {
     opacity: 0;
-    transform: rotate(24deg) translate3d(-180px, 0, 0);
+    transform: rotate(-38deg) translate3d(-220px, 0, 0);
   }
-  91% {
-    opacity: 0.88;
+  90% {
+    opacity: 0.92;
   }
   97% {
     opacity: 0;
-    transform: rotate(24deg) translate3d(260px, 0, 0);
+    transform: rotate(-38deg) translate3d(320px, 0, 0);
   }
   100% {
     opacity: 0;
-    transform: rotate(24deg) translate3d(260px, 0, 0);
+    transform: rotate(-38deg) translate3d(320px, 0, 0);
   }
 }
 
 @keyframes celestial-comet-glide-2 {
-  0%, 90% {
+  0%, 89% {
     opacity: 0;
-    transform: rotate(19deg) translate3d(-160px, 0, 0);
+    transform: rotate(-38deg) translate3d(-190px, 0, 0);
   }
-  93% {
-    opacity: 0.78;
+  92% {
+    opacity: 0.84;
   }
   98% {
     opacity: 0;
-    transform: rotate(19deg) translate3d(240px, 0, 0);
+    transform: rotate(-38deg) translate3d(280px, 0, 0);
   }
   100% {
     opacity: 0;
-    transform: rotate(19deg) translate3d(240px, 0, 0);
+    transform: rotate(-38deg) translate3d(280px, 0, 0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .celestial-nebula-drift-a,
-  .celestial-nebula-drift-b,
-  .celestial-star-layer-a,
-  .celestial-star-layer-b,
+  .celestial-plane-far,
+  .celestial-plane-mid,
+  .celestial-plane-near,
   .celestial-jewel,
   .celestial-comet {
     animation: none;
+    transform: none;
   }
 
   .celestial-comet {
