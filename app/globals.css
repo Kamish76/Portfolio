@@ -80,7 +80,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  will-change: transform;
+  transform: translate3d(0, calc(var(--celestial-scroll, 0) * var(--celestial-travel)), 0);
 }
 
 .celestial-plane-svg {
@@ -89,41 +89,45 @@ body {
   height: 100%;
 }
 
-/* 3 Parallax Depth Planes (fallback driven by --celestial-scroll; upgraded to native CSS scroll-timeline below) */
 .celestial-plane-far {
   height: 150vh;
   opacity: 0.92;
-  transform: translate3d(0, calc(var(--celestial-scroll, 0) * -50vh), 0);
+  --celestial-travel: -50vh;
 }
 
 .celestial-plane-mid {
   height: 225vh;
   opacity: 0.86;
-  transform: translate3d(0, calc(var(--celestial-scroll, 0) * -125vh), 0);
+  --celestial-travel: -125vh;
 }
 
 .celestial-plane-near {
   height: 300vh;
   opacity: 0.92;
-  transform: translate3d(0, calc(var(--celestial-scroll, 0) * -200vh), 0);
+  --celestial-travel: -200vh;
 }
 
-@supports (animation-timeline: scroll()) {
+@media (max-width: 768px) {
   .celestial-plane-far {
-    transform: none;
-    animation: celestial-parallax-far linear both;
-    animation-timeline: scroll(root block);
+    height: 120vh;
+    --celestial-travel: -20vh;
   }
 
   .celestial-plane-mid {
-    transform: none;
-    animation: celestial-parallax-mid linear both;
-    animation-timeline: scroll(root block);
+    height: 145vh;
+    --celestial-travel: -45vh;
   }
 
   .celestial-plane-near {
+    height: 170vh;
+    --celestial-travel: -70vh;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .celestial-plane {
     transform: none;
-    animation: celestial-parallax-near linear both;
+    animation: celestial-parallax linear both;
     animation-timeline: scroll(root block);
   }
 }
@@ -133,7 +137,6 @@ body {
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   animation-direction: alternate;
-  will-change: transform, opacity;
 }
 
 .celestial-comets,
@@ -150,7 +153,6 @@ body {
   height: 2px;
   border-radius: 999px;
   opacity: 0;
-  will-change: transform, opacity;
 }
 
 .celestial-comet::after {
@@ -196,30 +198,12 @@ body {
     radial-gradient(ellipse 92% 86% at 50% 50%, rgba(4, 9, 20, 0.08) 0%, rgba(4, 8, 18, 0.36) 100%);
 }
 
-@keyframes celestial-parallax-far {
+@keyframes celestial-parallax {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(0, -50vh, 0);
-  }
-}
-
-@keyframes celestial-parallax-mid {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(0, -125vh, 0);
-  }
-}
-
-@keyframes celestial-parallax-near {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(0, -200vh, 0);
+    transform: translate3d(0, var(--celestial-travel), 0);
   }
 }
 
@@ -271,9 +255,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .celestial-plane-far,
-  .celestial-plane-mid,
-  .celestial-plane-near,
+  .celestial-plane,
   .celestial-jewel,
   .celestial-comet {
     animation: none;
@@ -1040,7 +1022,7 @@ body {
   position: relative;
   z-index: 1;
   border-top: 1px solid var(--border-subtle);
-  background: rgba(5, 10, 20, 0.35);
+  background: rgba(5, 10, 20, 0.70);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: 5rem 1.5rem 3.5rem;

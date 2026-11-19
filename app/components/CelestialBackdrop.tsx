@@ -77,45 +77,64 @@ function buildFarDots(): FarDot[] {
   return dots;
 }
 
-function buildFarStreaks(): DiagStreak[] {
-  const rand = createPrng(991042);
-  const colors = ["#264b82", "#3a6bb0", "#66aaff", "#f09464", "#ffe4a8", "#ffffff"];
-  const streaks: DiagStreak[] = [];
-  for (let i = 0; i < 34; i++) {
-    streaks.push({
-      x: r1(rand() * 1440),
-      y: r1(rand() * 1350),
-      w: r1(48 + rand() * 175),
-      h: r1(1.4 + rand() * 2.4),
-      fill: colors[Math.floor(rand() * colors.length)],
-      opacity: r1(0.2 + rand() * 0.42),
-      headDot: rand() > 0.55,
-    });
-  }
-  return streaks;
+interface StreakConfig {
+  seed: number;
+  count: number;
+  maxY: number;
+  minW: number;
+  spanW: number;
+  minH: number;
+  spanH: number;
+  minOp: number;
+  spanOp: number;
+  dotThreshold: number;
+  colors: readonly string[];
 }
 
-function buildMidStreaks(): DiagStreak[] {
-  const rand = createPrng(314159);
-  const colors = ["#ffffff", "#a8dcff", "#ffd685", "#f28564", "#e85d75", "#4c80c4"];
+function buildStreaks(cfg: StreakConfig): DiagStreak[] {
+  const rand = createPrng(cfg.seed);
   const streaks: DiagStreak[] = [];
-  for (let i = 0; i < 42; i++) {
+  for (let i = 0; i < cfg.count; i++) {
     streaks.push({
       x: r1(rand() * 1440),
-      y: r1(rand() * 2025),
-      w: r1(42 + rand() * 210),
-      h: r1(1.8 + rand() * 3.4),
-      fill: colors[Math.floor(rand() * colors.length)],
-      opacity: r1(0.34 + rand() * 0.52),
-      headDot: rand() > 0.4,
+      y: r1(rand() * cfg.maxY),
+      w: r1(cfg.minW + rand() * cfg.spanW),
+      h: r1(cfg.minH + rand() * cfg.spanH),
+      fill: cfg.colors[Math.floor(rand() * cfg.colors.length)],
+      opacity: r1(cfg.minOp + rand() * cfg.spanOp),
+      headDot: rand() > cfg.dotThreshold,
     });
   }
   return streaks;
 }
 
 const FAR_DOTS = buildFarDots();
-const FAR_STREAKS = buildFarStreaks();
-const MID_STREAKS = buildMidStreaks();
+const FAR_STREAKS = buildStreaks({
+  seed: 991042,
+  count: 34,
+  maxY: 1350,
+  minW: 48,
+  spanW: 175,
+  minH: 1.4,
+  spanH: 2.4,
+  minOp: 0.2,
+  spanOp: 0.42,
+  dotThreshold: 0.55,
+  colors: ["#264b82", "#3a6bb0", "#66aaff", "#f09464", "#ffe4a8", "#ffffff"],
+});
+const MID_STREAKS = buildStreaks({
+  seed: 314159,
+  count: 42,
+  maxY: 2025,
+  minW: 42,
+  spanW: 210,
+  minH: 1.8,
+  spanH: 3.4,
+  minOp: 0.34,
+  spanOp: 0.52,
+  dotThreshold: 0.4,
+  colors: ["#ffffff", "#a8dcff", "#ffd685", "#f28564", "#e85d75", "#4c80c4"],
+});
 
 const MID_MINI_ORBS: MiniOrb[] = [
   { cx: 520, cy: 195, r: 15, base: "#e86472", lit: "#ffd5a8", shadow: "#6c2142" },
@@ -157,17 +176,15 @@ function DiagonalCloudBand({
   x,
   y,
   scale = 1,
-  angle = -38,
   warmId,
 }: {
   x: number;
   y: number;
   scale?: number;
-  angle?: number;
   warmId: string;
 }) {
   return (
-    <g transform={`translate(${x} ${y}) rotate(${angle}) scale(${scale})`}>
+    <g transform={`translate(${x} ${y}) rotate(-38) scale(${scale})`}>
       {/* Tier 1: Deep cobalt cloud shadow + sheared horizontal speed bars */}
       <g fill="#162e58">
         <rect x="-720" y="14" width="1440" height="46" rx="23" />
@@ -250,6 +267,35 @@ function DiagonalCloudBand({
   );
 }
 
+function StreakLayer({
+  streaks,
+  prefix,
+  dotOffset,
+  dotScale,
+}: {
+  streaks: DiagStreak[];
+  prefix: string;
+  dotOffset: number;
+  dotScale: number;
+}) {
+  return (
+    <>
+      {streaks.map((st, idx) => (
+        <g
+          key={`${prefix}-${idx}`}
+          transform={`translate(${st.x} ${st.y}) rotate(-38)`}
+          opacity={st.opacity}
+        >
+          <rect x={0} y={-st.h / 2} width={st.w} height={st.h} rx={st.h / 2} fill={st.fill} />
+          {st.headDot && (
+            <circle cx={st.w + dotOffset} cy={0} r={r1(st.h * dotScale)} fill={st.fill} />
+          )}
+        </g>
+      ))}
+    </>
+  );
+}
+
 function FivePointStar({ size, fill }: { size: number; fill: string }) {
   const outer = size;
   const inner = size * 0.44;
@@ -292,18 +338,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* Distant diagonal kinetic speed-lines */}
-          {FAR_STREAKS.map((st, idx) => (
-            <g
-              key={`fs-${idx}`}
-              transform={`translate(${st.x} ${st.y}) rotate(-38)`}
-              opacity={st.opacity}
-            >
-              <rect x={0} y={-st.h / 2} width={st.w} height={st.h} rx={st.h / 2} fill={st.fill} />
-              {st.headDot && (
-                <circle cx={st.w + 8} cy={0} r={r1(st.h * 0.85)} fill={st.fill} />
-              )}
-            </g>
-          ))}
+          <StreakLayer streaks={FAR_STREAKS} prefix="fs" dotOffset={8} dotScale={0.85} />
 
           {/* Deep-field crisp stylized star dots */}
           {FAR_DOTS.map((d, idx) => (
@@ -341,18 +376,7 @@ export default function CelestialBackdrop() {
           </defs>
 
           {/* Diagonal mid-ground kinetic streaks */}
-          {MID_STREAKS.map((st, idx) => (
-            <g
-              key={`ms-${idx}`}
-              transform={`translate(${st.x} ${st.y}) rotate(-38)`}
-              opacity={st.opacity}
-            >
-              <rect x={0} y={-st.h / 2} width={st.w} height={st.h} rx={st.h / 2} fill={st.fill} />
-              {st.headDot && (
-                <circle cx={st.w + 10} cy={0} r={r1(st.h * 0.9)} fill={st.fill} />
-              )}
-            </g>
-          ))}
+          <StreakLayer streaks={MID_STREAKS} prefix="ms" dotOffset={10} dotScale={0.9} />
 
           {/* Cloud Highway 1: Sweeping upper-right cel-shaded nebula band (Hero & Top Projects) */}
           <DiagonalCloudBand x={1150} y={365} scale={0.96} warmId="cp-cloud-warm" />
@@ -452,7 +476,7 @@ export default function CelestialBackdrop() {
           </defs>
 
           {/* 1. HERO UPPER-RIGHT: Ringed Coral-Amber Gas Giant */}
-          <g transform="translate(1205 182)">
+          <g transform="translate(1035 168)">
             {/* Back ring arcs */}
             <g transform="rotate(-28)" fill="none">
               <path d="M-112 0 A112 28 0 0 1 112 0" stroke="#ffd685" strokeWidth="4" strokeOpacity="0.72" />
@@ -475,7 +499,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* 2. HERO UPPER-LEFT: Pale Ice-Blue & Peach Crescent Moon */}
-          <g transform="translate(126 196)">
+          <g transform="translate(86 108)">
             <ellipse
               cx="0"
               cy="0"
@@ -501,7 +525,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* 3. HERO MID-RIGHT: Sleek Cyan Warp-Comet Swoosh (inspired by top-left concept motif) */}
-          <g transform="translate(955 470) rotate(-38)">
+          <g transform="translate(885 455) rotate(-38)">
             <ellipse cx="0" cy="0" rx="145" ry="30" fill="none" stroke="#1e5394" strokeWidth="4" strokeOpacity="0.65" />
             <ellipse cx="14" cy="0" rx="112" ry="20" fill="none" stroke="#4cc4ff" strokeWidth="2.4" strokeOpacity="0.78" strokeDasharray="140 24 90 18" />
             <polygon points="-130,0 -10,-9 112,0 -10,9" fill="url(#cp-warp-beam)" />
@@ -512,7 +536,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* 4. PROJECTS-LEFT: Tilted Coral-Gold Spiral Disc Galaxy */}
-          <g transform="translate(148 935) rotate(36)">
+          <g transform="translate(430 915) rotate(36)">
             {/* Relativistic polar jet */}
             <rect x="-2" y="-128" width="4" height="256" rx="2" fill="#f2746b" opacity="0.72" />
             <rect x="-1" y="-85" width="2" height="170" rx="1" fill="#fff2cc" opacity="0.88" />
@@ -525,7 +549,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* 5. PROJECTS-RIGHT: Signature Turquoise Ocean & Coral-Cloud Terra World */}
-          <g transform="translate(1258 1130)">
+          <g transform="translate(1035 1165)">
             <circle r="94" fill="url(#cp-terra-ocean)" />
             <g clipPath="url(#cp-clip-terra)">
               {/* Stylized swirling coral-peach & cream-gold cloud continents */}
@@ -572,7 +596,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* 6. MID-PAGE LEFT: Supersonic White-Gold Stylized Comet Silhouette */}
-          <g transform="translate(275 1475) rotate(-38)">
+          <g transform="translate(455 1480) rotate(-38)">
             <polygon points="-165,0 45,-7 148,0 45,7" fill="#fff7e2" />
             <polygon points="-75,-2 38,-14 76,0 38,14" fill="#ffffff" />
             <circle cx="-185" cy="0" r="4" fill="#ffd685" />
@@ -582,7 +606,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* 7. JOURNEY-LEFT: Sunset-Amber Ringed Planet & Cyan Satellite */}
-          <g transform="translate(162 1835)">
+          <g transform="translate(385 1825)">
             <g transform="rotate(-24)" fill="none">
               <path d="M-96 0 A96 24 0 0 1 96 0" stroke="#7cc4ff" strokeWidth="3" strokeOpacity="0.62" />
             </g>
@@ -601,7 +625,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* 8. STACK-RIGHT: Crimson-Cobalt Nebular Planet */}
-          <g transform="translate(1272 2065)">
+          <g transform="translate(1245 2065)">
             <circle r="62" fill="#18346b" />
             <g clipPath="url(#cp-clip-nebworld)">
               <path
@@ -622,7 +646,7 @@ export default function CelestialBackdrop() {
           </g>
 
           {/* 9. CONTACT-HORIZON: Luminous Giant Cream-Gold Moon & Gliding White Comet */}
-          <g transform="translate(1288 2385)">
+          <g transform="translate(1045 2385)">
             <circle r="116" fill="url(#cp-horizon-moon)" />
             <g clipPath="url(#cp-clip-horizon)">
               <path
@@ -634,7 +658,7 @@ export default function CelestialBackdrop() {
               <circle cx="28" cy="-22" r="12" fill="#d4e2f0" fillOpacity="0.55" />
             </g>
           </g>
-          <g transform="translate(1035 2275) rotate(-38)">
+          <g transform="translate(835 2275) rotate(-38)">
             <polygon points="-78,0 18,-6 74,0 18,6" fill="#ffffff" />
             <polygon points="-6,-18 16,0 -6,18 4,0" fill="#e6f4ff" />
           </g>

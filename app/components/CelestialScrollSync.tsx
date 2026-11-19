@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 export default function CelestialScrollSync() {
   useEffect(() => {
-    if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (typeof CSS !== "undefined" && CSS.supports("animation-timeline", "scroll()")) {
       return;
@@ -15,10 +14,7 @@ export default function CelestialScrollSync() {
 
     const update = () => {
       rafId = 0;
-      const maxScroll = Math.max(
-        1,
-        root.scrollHeight - window.innerHeight
-      );
+      const maxScroll = Math.max(1, root.scrollHeight - window.innerHeight);
       const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
       root.style.setProperty("--celestial-scroll", progress.toFixed(4));
     };
@@ -31,10 +27,15 @@ export default function CelestialScrollSync() {
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
 
+    const observer =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(schedule) : null;
+    observer?.observe(document.body);
+
     return () => {
       if (rafId) window.cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
+      observer?.disconnect();
       root.style.removeProperty("--celestial-scroll");
     };
   }, []);
