@@ -56,26 +56,258 @@ body {
   color: #ffffff;
 }
 
-/* Global Ambient Canvas & Original Space Nebula Background */
+/* Global Ambient Shell (transparent over fixed CelestialBackdrop in RootLayout) */
 .portfolio-shell {
   position: relative;
   min-height: 100svh;
-  background-color: var(--bg-canvas);
-  background-image: url("/space-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background: transparent;
 }
 
-/* Dark deep-space overlay so nebula pillars shine through while keeping text legible */
-.portfolio-shell::before {
-  content: "";
+/* Stylized Multi-Layer Scroll-Parallax Vector Celestial Backdrop */
+.celestial-bg {
   position: fixed;
   inset: 0;
-  pointer-events: none;
   z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: linear-gradient(155deg, #050a14 0%, #09152b 48%, #060d1c 100%);
+  isolation: isolate;
+  contain: layout style paint;
+}
+
+.celestial-plane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translate3d(0, calc(var(--celestial-scroll, 0) * var(--celestial-travel)), 0);
+}
+
+.celestial-plane-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.celestial-plane-far {
+  height: 150vh;
+  opacity: 0.92;
+  --celestial-travel: -50vh;
+}
+
+.celestial-plane-mid {
+  height: 225vh;
+  opacity: 0.86;
+  --celestial-travel: -125vh;
+}
+
+.celestial-plane-near {
+  height: 300vh;
+  opacity: 0.92;
+  --celestial-travel: -200vh;
+}
+
+@media (max-width: 768px) {
+  .celestial-plane-far {
+    height: 120vh;
+    --celestial-travel: -20vh;
+  }
+
+  .celestial-plane-mid {
+    height: 145vh;
+    --celestial-travel: -45vh;
+  }
+
+  .celestial-plane-near {
+    height: 170vh;
+    --celestial-travel: -70vh;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .celestial-plane {
+    transform: none;
+    animation: celestial-parallax linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+.celestial-jewel {
+  animation-name: celestial-jewel-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.celestial-comets,
+.celestial-veil {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Live subtle shooting stars gliding along the -38deg kinetic axis */
+.celestial-comet {
+  position: absolute;
+  height: 2px;
+  border-radius: 999px;
+  opacity: 0;
+}
+
+.celestial-comet::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  transform: translate(50%, -50%);
+  background: #ffffff;
+}
+
+.celestial-comet-1 {
+  top: 34%;
+  left: 56%;
+  width: 165px;
+  background: linear-gradient(90deg, transparent 0%, rgba(124, 196, 255, 0.45) 55%, rgba(255, 246, 220, 0.98) 100%);
+  animation: celestial-comet-glide-1 16s ease-in-out 2.5s infinite;
+}
+
+.celestial-comet-1::after {
+  box-shadow: 0 0 8px 2px rgba(255, 214, 133, 0.85), 0 0 14px rgba(102, 170, 255, 0.65);
+}
+
+.celestial-comet-2 {
+  top: 62%;
+  left: 22%;
+  width: 135px;
+  background: linear-gradient(90deg, transparent 0%, rgba(242, 133, 100, 0.42) 55%, rgba(255, 244, 214, 0.94) 100%);
+  animation: celestial-comet-glide-2 23s ease-in-out 10s infinite;
+}
+
+.celestial-comet-2::after {
+  box-shadow: 0 0 8px 2px rgba(255, 204, 102, 0.82);
+}
+
+/* Light-touch contrast veil protecting hero copy while keeping vector art crisp */
+.celestial-veil {
   background:
-    radial-gradient(circle at 50% 35%, rgba(0, 10, 25, 0.45) 0%, rgba(4, 9, 20, 0.78) 100%);
+    radial-gradient(ellipse 52% 48% at 24% 40%, rgba(5, 10, 22, 0.44) 0%, rgba(5, 10, 22, 0.14) 68%, transparent 100%),
+    radial-gradient(ellipse 92% 86% at 50% 50%, rgba(4, 9, 20, 0.08) 0%, rgba(4, 8, 18, 0.36) 100%);
+}
+
+@keyframes celestial-parallax {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, var(--celestial-travel), 0);
+  }
+}
+
+@keyframes celestial-jewel-twinkle {
+  0% {
+    opacity: 0.62;
+    transform: scale(0.84);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes celestial-comet-glide-1 {
+  0%, 87% {
+    opacity: 0;
+    transform: rotate(-38deg) translate3d(-220px, 0, 0);
+  }
+  90% {
+    opacity: 0.92;
+  }
+  97% {
+    opacity: 0;
+    transform: rotate(-38deg) translate3d(320px, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-38deg) translate3d(320px, 0, 0);
+  }
+}
+
+@keyframes celestial-comet-glide-2 {
+  0%, 89% {
+    opacity: 0;
+    transform: rotate(-38deg) translate3d(-190px, 0, 0);
+  }
+  92% {
+    opacity: 0.84;
+  }
+  98% {
+    opacity: 0;
+    transform: rotate(-38deg) translate3d(280px, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-38deg) translate3d(280px, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celestial-plane,
+  .celestial-jewel,
+  .celestial-comet {
+    animation: none;
+    transform: none;
+  }
+
+  .celestial-comet {
+    display: none;
+  }
+}
+
+/* Top-Left K76 Brand Mark */
+.brand-mark {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.brand-mark img {
+  display: block;
+  border-radius: 8px;
+}
+
+.brand-mark:hover,
+.brand-mark:focus-visible {
+  border-color: var(--border-amber);
+  box-shadow: 0 0 18px rgba(255, 204, 102, 0.22);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .brand-mark {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .brand-mark img {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 /* Right-Side Star Orbit Rail Navigation (Option 5) */
@@ -833,7 +1065,7 @@ body {
   position: relative;
   z-index: 1;
   border-top: 1px solid var(--border-subtle);
-  background: rgba(5, 10, 20, 0.35);
+  background: rgba(5, 10, 20, 0.70);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: 5rem 1.5rem 3.5rem;
