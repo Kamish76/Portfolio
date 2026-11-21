@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const NAV_ITEMS = [
@@ -53,24 +54,35 @@ export default function Navbar() {
   }, []);
 
   return (
-    <aside className="orbit-nav-wrapper" aria-label="Section navigation">
-      <nav className="orbit-nav">
-        <span className="orbit-nav-spine" aria-hidden="true" />
-        {NAV_ITEMS.map((item) => (
-          <a
-            key={item.id}
-            href={`#${item.id}`}
-            className="orbit-nav-link"
-            data-active={activeId === item.id}
-          >
-            <span className="orbit-nav-label">
-              <span className="orbit-nav-index">{item.index}</span>
-              {item.label}
-            </span>
-            <span className="orbit-nav-star" aria-hidden="true" />
-          </a>
-        ))}
-      </nav>
-    </aside>
+    <>
+      <a href="#home" className="brand-mark" aria-label="K76 — Back to top">
+        <Image
+          src="/k76-logo.png"
+          alt="K76 logo"
+          width={36}
+          height={36}
+          priority
+        />
+      </a>
+      <aside className="orbit-nav-wrapper" aria-label="Section navigation">
+        <nav className="orbit-nav">
+          <span className="orbit-nav-spine" aria-hidden="true" />
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className="orbit-nav-link"
+              data-active={activeId === item.id}
+            >
+              <span className="orbit-nav-label">
+                <span className="orbit-nav-index">{item.index}</span>
+                {item.label}
+              </span>
+              <span className="orbit-nav-star" aria-hidden="true" />
+            </a>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 }

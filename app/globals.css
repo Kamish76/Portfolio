@@ -267,6 +267,44 @@ body {
   }
 }
 
+/* Top-Left K76 Brand Mark */
+.brand-mark {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.brand-mark img {
+  display: block;
+  border-radius: 8px;
+}
+
+.brand-mark:hover,
+.brand-mark:focus-visible {
+  border-color: var(--border-amber);
+  box-shadow: 0 0 18px rgba(255, 204, 102, 0.22);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .brand-mark {
+    top: 1rem;
+    left: 1rem;
+  }
+}
+
 /* Right-Side Star Orbit Rail Navigation (Option 5) */
 .orbit-nav-wrapper {
   position: fixed;
