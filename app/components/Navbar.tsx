@@ -59,8 +59,8 @@ export default function Navbar() {
         <Image
           src="/k76-logo.png"
           alt="K76 logo"
-          width={36}
-          height={36}
+          width={48}
+          height={48}
           priority
         />
       </a>
